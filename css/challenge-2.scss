@@ -1,0 +1,49 @@
+#cro-locations {
+  $bg-color: rgb(255, 128, 101);
+  $black-color: rgb(59, 57, 63);
+  $white-color: #ffffff;
+  margin-bottom: 60px;
+
+  h2 {
+    margin: 0px;
+    text-align: center;
+    font-family: "Tiempos Text", serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 30px;
+    margin-bottom: 20px;
+    color: $black-color;
+  }
+
+  .block-wrap {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    li {
+      width: 20%;
+      display: block;
+      height: 137px;
+      border-radius: 2px;
+      background: $bg-color;
+
+      a {
+        color: $white-color;
+        text-transform: capitalize;
+        text-decoration: none;
+        font-family: "Akkurat Std Regular";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+      }
+    }
+  }
+}
