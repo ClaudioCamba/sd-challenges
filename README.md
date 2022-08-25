@@ -38,6 +38,7 @@ Solutions for SD Challenges
 5. Click save the rules
 
 ### Testing challenges 1 & 2
+<sub>You can pause the rules incase you want to test individually, click on code injector extension icon > click on facedown chevron > click "Enabled"<sub>
 
 - Navigate to `https://www.onefinestay.com/` on your browser to begin testing.
   - For mobile testing make sure to open the chrome dev tool and select a mobile device from the device toolbar (chromes device simulator)
