@@ -1,8 +1,26 @@
+.cro-price,
+.cro-outline,
+.cro-percent {
+  font-family: "Tiempos Text", serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.cro-outline,
+.cro-percent {
+  color: rgb(38, 35, 42);
+}
+
 .cro-price {
-  color: rgb(246, 99, 68) !important;
+  color: rgb(246, 99, 68);
 }
 
 .cro-outline,
 .cro-r-outline {
   text-decoration: line-through;
+}
+
+.cro-hide {
+  display: none;
 }/*# sourceMappingURL=challenge-1.css.map */

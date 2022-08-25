@@ -1,10 +1,27 @@
 $orange: rgb(246, 99, 68);
+$black: rgb(38, 35, 42);
 
+.cro-price,
+.cro-outline,
+.cro-percent {
+  font-family: "Tiempos Text", serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 30px;
+}
+.cro-outline,
+.cro-percent {
+  color: $black;
+}
 .cro-price {
-  color: $orange !important;
+  color: $orange;
 }
 
 .cro-outline,
 .cro-r-outline {
   text-decoration: line-through;
+}
+
+.cro-hide {
+  display: none;
 }

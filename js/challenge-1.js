@@ -27,18 +27,29 @@ const challenge1 = (() => {
     }
 
     getPrice() {
-      let cleanPrice = this.perNight.querySelectorAll("span")[0].innerText;
-      if (this.perNight.querySelectorAll("span").length > 1) {
-        cleanPrice = this.perNight.querySelectorAll("span")[1].innerText;
-      }
-
+      let cleanPrice = this.perNight.querySelectorAll(".sc-16ewn0o-0.hEyBwM")[0].innerText;
       return parseInt(cleanPrice.replace(/\D/g, ""));
     }
 
-    getCurrency() {
-      let currency = this.perNight.querySelectorAll("span")[0].innerText.split("")[0];
-      if (this.perNight.querySelectorAll("span").length > 1) {
-        currency = this.perNight.querySelectorAll("span")[1].innerText.split("")[0];
+    getCurrency(elem) {
+      let currency = "";
+
+      if (elem) {
+        currency = elem;
+      } else {
+        currency = this.perNight.querySelectorAll(".sc-16ewn0o-0.hEyBwM")[0].innerText;
+      }
+
+      if (currency.indexOf("A$") > -1) {
+        currency = "A$";
+      } else if (currency.indexOf("£") > -1) {
+        currency = "£";
+      } else if (currency.indexOf("CA$") > -1) {
+        currency = "CA$";
+      } else if (currency.indexOf("€") > -1) {
+        currency = "€";
+      } else {
+        currency = "$";
       }
       return currency;
     }
@@ -47,25 +58,24 @@ const challenge1 = (() => {
       const discP = document.createElement("span");
       const current = document.createElement("span");
       const percent = document.createElement("span");
+      const spanWrap = document.createElement("span");
       current.classList.add("cro-outline");
       discP.classList.add("cro-price");
       percent.classList.add("cro-percent");
+      spanWrap.classList.add("cro-wrap");
       discP.innerText = this.currency + this.applyDisc(this.price, this.discount).toLocaleString("en") + " ";
       current.innerText = this.currency + this.price.toLocaleString("en");
       percent.innerText = " (-" + this.discount + "%)";
 
-      let span = this.perNight.querySelectorAll("span")[0];
-      if (this.perNight.querySelectorAll("span").length > 1) {
-        span = this.perNight.querySelectorAll("span")[1];
-      }
-
-      span.innerHTML = "";
-      span.appendChild(discP);
-      span.appendChild(current);
-      span.appendChild(percent);
+      let span = this.perNight.querySelectorAll(".sc-16ewn0o-0.hEyBwM")[0];
+      span.classList.add("cro-hide");
+      spanWrap.prepend(discP);
+      spanWrap.appendChild(current);
+      spanWrap.appendChild(percent);
+      this.perNight.insertBefore(spanWrap, span);
     }
 
-    addRoomDiscount() {
+    addRoomDiscount(val) {
       let roomDisc = this.applyDisc(this.price, this.discount) / this.room;
       const discR = document.createElement("span");
       const current = document.createElement("span");
@@ -77,11 +87,18 @@ const challenge1 = (() => {
       discR.innerText = "approx " + this.currency + roomDisc.toLocaleString("en") + " ";
       current.innerText = this.currency + Math.round(this.price / this.room);
       percent.innerText = " (-" + this.discount + "%) / bedroom";
-
-      this.perBroom.innerHTML = "";
-      this.perBroom.appendChild(discR);
-      this.perBroom.appendChild(current);
-      this.perBroom.appendChild(percent);
+      if (val) {
+        return [
+          "approx " + this.currency + roomDisc.toLocaleString("en") + " ",
+          this.currency + Math.round(this.price / this.room),
+          " (-" + this.discount + "%) / bedroom",
+        ];
+      } else {
+        this.perBroom.innerHTML = "";
+        this.perBroom.prepend(discR);
+        this.perBroom.appendChild(current);
+        this.perBroom.appendChild(percent);
+      }
     }
   }
 
@@ -148,18 +165,53 @@ const challenge1 = (() => {
     return check;
   };
 
-  return { implementDiscount, observeDOM, mobileCheck };
+  const updateCheck = () => {
+    const cards = getCards();
+    for (const card of cards) {
+      const newP = card.elem.querySelector(".hEyBwM");
+      const oldP = card.elem.querySelector(".cro-outline");
+      const disP = card.elem.querySelector(".cro-price");
+      const disR = card.elem.querySelector(".cro-r-price");
+      const oldR = card.elem.querySelector(".cro-r-outline");
+
+      if (newP.innerText !== oldP.innerText) {
+        const roomVAl = card.addRoomDiscount("val");
+        oldP.innerText = newP.innerText;
+        disP.innerText = card.getCurrency(newP.innerText) + card.applyDisc(card.getPrice(), card.discount).toLocaleString("en") + " ";
+        disR.innerText = roomVAl[0];
+        oldR.innerText = roomVAl[1];
+      }
+    }
+  };
+
+  return { implementDiscount, observeDOM, mobileCheck, updateCheck };
 })();
 
 // Initial load / on Dom changes
 document.addEventListener("readystatechange", (event) => {
   challenge1.observeDOM(window.document.body, function () {
-    // console.log("Changes1");
     if (window.document.location.href.indexOf("www.onefinestay.com/search/") > -1) {
-      let lengths = document.querySelectorAll(".cro-price").length < document.querySelectorAll(".gr6dul-4.gTORJT > p:first-child").length;
-      // console.log("Changes2");
-      if (buildLoc.mobileCheck() && lengths) {
+      let lengths = document.querySelectorAll(".cro-wrap").length < document.querySelectorAll(".gr6dul-4.gTORJT > p:first-child").length;
+      let update = document.querySelectorAll(".idQnsN .hEyBwM").length === document.querySelectorAll(".idQnsN .cro-outline").length;
+
+      // Add amendments when removed from page
+      if (buildLoc.mobileCheck() && lengths && !update) {
         challenge1.implementDiscount();
+      }
+      // Update pricing when currency updated
+      let oldP = "";
+      let newP = "";
+      if (update && !lengths) {
+        for (let i = 0; i < document.querySelectorAll(".idQnsN").length; i++) {
+          if (document.querySelectorAll(".idQnsN .cro-outline").length > 0) {
+            newP += document.querySelectorAll(".idQnsN .cro-outline")[i].innerText;
+            oldP += document.querySelectorAll(".idQnsN .hEyBwM")[i].innerText;
+          }
+        }
+        if (newP !== oldP) {
+          console.log("start");
+          challenge1.updateCheck();
+        }
       }
     }
   });
