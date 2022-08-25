@@ -209,7 +209,6 @@ document.addEventListener("readystatechange", (event) => {
           }
         }
         if (newP !== oldP) {
-          console.log("start");
           challenge1.updateCheck();
         }
       }
