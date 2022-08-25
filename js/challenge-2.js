@@ -9,9 +9,6 @@ const storeSearch = (() => {
     if (key in localStorage) {
       searches = JSON.parse(localStorage.getItem(key));
     }
-    // if (checkUrl()) {
-    //   checkBeforeAdd();
-    // }
   };
 
   // Get search values
