@@ -195,7 +195,7 @@ document.addEventListener("readystatechange", (event) => {
       let update = document.querySelectorAll(".idQnsN .hEyBwM").length === document.querySelectorAll(".idQnsN .cro-outline").length;
 
       // Add amendments when removed from page
-      if (buildLoc.mobileCheck() && lengths && !update) {
+      if (challenge1.mobileCheck() && lengths && !update) {
         challenge1.implementDiscount();
       }
       // Update pricing when currency updated
